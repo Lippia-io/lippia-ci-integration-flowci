@@ -1,0 +1,32 @@
+envs:
+  FLOWCI_GIT_URL: "GIT_URL_REPO"
+  FLOWCI_GIT_BRANCH: "PRINCIPAL_BRANCH_NAME"
+  FLOWCI_GIT_REPO: "GIT_REPO_NAME"
+  TAG: "@Smoke"
+  TESTTYPE: "parallel"
+  BROWSERTYPE: "chromeHeadless"
+  LANG: "@EN"
+
+docker:
+  image: "crowdar/lippia:3.2.1.1"
+
+steps:
+
+  - name: clone
+    plugin: 'gitclone'
+    allow_failure: false
+
+  - name: test
+    script:
+      cd $GIT_REPO_NAME && mvn clean test -P$TESTTYPE -P$BROWSERTYPE -Dcucumber.tags="--tags $TAG"
+    allow_failure: false
+
+  - name: package
+    envs:
+      MVN_CMD: "mvn package -Dmaven.test.skip=true"
+    plugin: 'maven-runner'
+
+  - name: upload
+    envs:
+      artifact_pattern: "*.jar"
+    plugin: 'artifact-upload'
