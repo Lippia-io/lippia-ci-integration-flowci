@@ -18,7 +18,7 @@ steps:
 
   - name: test
     script:
-      cd $GIT_REPO_NAME && mvn clean test -P$TESTTYPE -P$BROWSERTYPE -Dcucumber.tags="--tags $TAG"
+      cd $FLOWCI_GIT_REPO && mvn clean test -P$TESTTYPE -P$BROWSERTYPE -Dcucumber.tags="--tags $TAG"
     allow_failure: false
 
   - name: package
